@@ -2,20 +2,19 @@
 
 A demo of how I ended up loading in secrets into terraform from google cloud secrets manger
 
-## Initial problem
+## Why
 
 I am using terraform to manage my Cloud Run deployments but the Cloud Run deployments depend on secrets. Therefore Secret Manager secrets have to exist before `terraform apply` is run otherwise `Cloud Run` services fail to state
 
-All the tutorials online use hardcoded secrets which defeat the purpose of using a secrets manger. Following John Hanley comment from https://stackoverflow.com/questions/76149258  the solution I settled on is to have secrets separate from terraform with terraform only injecting them to use them. 
+# Solution
+
+All the tutorials online use hardcoded secrets which defeat the purpose of using a secrets manger. Following John Hanley comment from https://stackoverflow.com/questions/76149258  the solution I settled on is to have secrets separate from terraform with terraform only injecting `google_secret_manager_secret` so it does not even know the values and will not keep values in state.
 
 I am also choosing to prefill my secrets with random values if they do not exist. This allows me to start up the cloud run service, although the service will not correctly boot up due to missing secrets, I know my infrastructure is set up.
 
-After go into google console, set the secrets and restart the cloud run service and all is good.
+Afterwards i can set the secrets to real values and restart the cloud run service and all is good.
 
-
-## Overview
-
-- uses GCP bucket for tf state
+- uses GCP bucket for tf state (this is for future profin and sharing, since tf only store `google_secret_manager_secret` and not `google_secret_manager_secret_version`, tf does not track secrets values so encrypted sate is not needed )
 - secrets are bootstrapped with a bash script with random values if no secrete value is present
 - secrets are imported into terraform
 - terraform creates the infrastructure to run a cloud run service with the secrets
