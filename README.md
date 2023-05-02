@@ -52,5 +52,6 @@ After go into google console, set the secrets and restart the cloud run service 
 ## Problems:
 
 - secret keys are duplicated in two places, in `gcloud.init.sh` and in `main.locals`
+- terraform will destroy imported secrets on `terraform destroy` so it can clean up everything, be careful
 - terraform cloud run does not clean up a starts cloud service on error you will have to manually delete it if you need to run `terraform apply` after an error
 > Error creating Service: googleapi: Error 409: Resource 'my-service' already exists
